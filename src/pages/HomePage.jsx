@@ -1,54 +1,107 @@
 import styled from "styled-components"
 import { BiExit } from "react-icons/bi"
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai"
+import { useEffect, useState } from "react"
+import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
-export default function HomePage() {
+export default function HomePage({REACT_APP_URL_API}) {
+
+  let [nome, setNome] = useState('');
+  let [transacoes, setTransacoes] = useState([]);
+  let total = 0;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let dados = JSON.parse(localStorage.getItem("dadosMyWallet"));
+    console.log(dados);
+    if (dados){
+      setNome(dados.nome);
+      axios.get(`${REACT_APP_URL_API}/transacoes`, {headers: {Authorization: `Bearer ${dados.token}`}})
+           .then(res => {
+              setTransacoes(res.data);
+              console.log(transacoes);
+           })
+           .catch(err => console.log(err));
+    } else {
+      navigate('/')
+    }
+  }, []);
+
+  function sair(){
+    localStorage.removeItem("dadosMyWallet");
+    navigate('/');
+  }
+
+  if (transacoes.length > 0){ 
   return (
     <HomeContainer>
       <Header>
-        <h1>Olá, Fulano</h1>
-        <BiExit />
+        <h1>Olá, {nome}</h1>
+        <BiExit onClick={() => sair()}/>
       </Header>
-
       <TransactionsContainer>
         <ul>
-          <ListItemContainer>
-            <div>
-              <span>30/11</span>
-              <strong>Almoço mãe</strong>
-            </div>
-            <Value color={"negativo"}>120,00</Value>
-          </ListItemContainer>
-
-          <ListItemContainer>
-            <div>
-              <span>15/11</span>
-              <strong>Salário</strong>
-            </div>
-            <Value color={"positivo"}>3000,00</Value>
-          </ListItemContainer>
+          {transacoes.map(transacao => {
+              if (transacao.tipo == 'entrada'){
+                total += Number(transacao.valor);
+              } else{
+                total -= Number(transacao.valor);
+              }
+            return( 
+              <ListItemContainer>
+                <div>
+                  <span>{transacao.data}</span>
+                  <strong>{transacao.descricao}</strong>
+                </div>
+                <Value color={transacao.tipo}>{Number(transacao.valor).toFixed(2).replace(".", ",")}</Value>
+              </ListItemContainer>
+            )
+          })}
         </ul>
-
         <article>
           <strong>Saldo</strong>
-          <Value color={"positivo"}>2880,00</Value>
+          <Value color={total>=0 ? 'entrada' : ''}>{total.toFixed(2).replace(".", ",")}</Value>
         </article>
       </TransactionsContainer>
-
-
       <ButtonsContainer>
-        <button>
+        <button onClick={() => navigate('/nova-transacao/entrada')}>
           <AiOutlinePlusCircle />
           <p>Nova <br /> entrada</p>
         </button>
-        <button>
+        <button onClick={() => navigate('/nova-transacao/saida')}>
           <AiOutlineMinusCircle />
           <p>Nova <br />saída</p>
         </button>
       </ButtonsContainer>
-
     </HomeContainer>
   )
+  } else{ 
+    return(
+    <HomeContainer>
+      <Header>
+        <h1>Olá, {nome}</h1>
+        <BiExit onClick={() => sair()}/>
+      </Header>
+      <TransactionsContainer>
+        <DivSem>
+         <span>Não há registros de</span> 
+         <span>entrada ou saída</span>
+        </DivSem>
+      </TransactionsContainer>
+      <ButtonsContainer>
+        <button onClick={() => navigate('/nova-transacao/entrada')}>
+          <AiOutlinePlusCircle />
+          <p>Nova <br /> entrada</p>
+        </button>
+        <button onClick={() => navigate('/nova-transacao/saida')}>
+          <AiOutlineMinusCircle />
+          <p>Nova <br />saída</p>
+        </button>
+      </ButtonsContainer>
+    </HomeContainer>
+    )
+  }
 }
 
 const HomeContainer = styled.div`
@@ -74,6 +127,10 @@ const TransactionsContainer = styled.article`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  ul {
+    overflow: scroll;
+    height: 388px;
+  }
   article {
     display: flex;
     justify-content: space-between;   
@@ -105,7 +162,7 @@ const ButtonsContainer = styled.section`
 const Value = styled.div`
   font-size: 16px;
   text-align: right;
-  color: ${(props) => (props.color === "positivo" ? "green" : "red")};
+  color: ${(props) => (props.color === "entrada" ? "green" : "red")};
 `
 const ListItemContainer = styled.li`
   display: flex;
@@ -118,4 +175,13 @@ const ListItemContainer = styled.li`
     color: #c6c6c6;
     margin-right: 10px;
   }
+`
+const DivSem = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #868686;
 `

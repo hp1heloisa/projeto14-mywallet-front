@@ -6,14 +6,17 @@ import SignUpPage from "./pages/SignUpPage"
 import TransactionsPage from "./pages/TransactionPage"
 
 export default function App() {
+
+  const REACT_APP_URL_API = "https://projeto14-mywallet-back-sxzk.onrender.com"
+
   return (
     <PagesContainer>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<SignInPage />} />
-          <Route path="/cadastro" element={<SignUpPage />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/nova-transacao/:tipo" element={<TransactionsPage />} />
+          <Route path="/" element={<SignInPage REACT_APP_URL_API={REACT_APP_URL_API}/>} />
+          <Route path="/cadastro" element={<SignUpPage REACT_APP_URL_API={REACT_APP_URL_API}/>} />
+          <Route path="/home" element={<HomePage REACT_APP_URL_API={REACT_APP_URL_API} />} />
+          <Route path="/nova-transacao/:tipo" element={<TransactionsPage REACT_APP_URL_API={REACT_APP_URL_API} />} />
         </Routes>
       </BrowserRouter>
     </PagesContainer>
