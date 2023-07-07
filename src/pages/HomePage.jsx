@@ -67,14 +67,14 @@ export default function HomePage() {
                   <span>{transacao.data}</span>
                   <strong data-test="registry-name">{transacao.descricao}</strong>
                 </div>
-                <Value color={transacao.tipo} data-test="registry-amount">{Number(transacao.valor).toFixed(2).replace(".", ",")} <span onClick={() => deletar(transacao)} data-test="registry-delete">x</span></Value>
+                <Value color={transacao.tipo} data-test="registry-amount">{Number(transacao.valor).toFixed(2).toString().replace(".", ",")} <span onClick={() => deletar(transacao)} data-test="registry-delete">x</span></Value>
               </ListItemContainer>
             )
           })}
         </ul>
         <article>
           <strong>Saldo</strong>
-          <Value color={total>=0 ? 'entrada' : ''} data-test="total-amount">{total.toFixed(2).replace(".", ",")}</Value>
+          <Value color={total>=0 ? 'entrada' : ''} data-test="total-amount">{total.toFixed(2).toString().replace(".", ",")}</Value>
         </article>
       </TransactionsContainer>
       <ButtonsContainer>
