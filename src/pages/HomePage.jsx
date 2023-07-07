@@ -34,7 +34,7 @@ export default function HomePage() {
   }
 
   function deletar(transacao) {
-    const ok = confirm("Tem certeza que gostaria de deletar essa transação");
+    const ok = confirm("Tem certeza que gostaria de deletar essa transação?");
     if (ok){
       let dados = JSON.parse(localStorage.getItem("dadosMyWallet"));
       axios.delete(`${import.meta.env.VITE_API_URL}/deletar`, {
