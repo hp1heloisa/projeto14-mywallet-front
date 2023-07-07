@@ -18,7 +18,9 @@ export default function SignInPage() {
             localStorage.setItem('dadosMyWallet', JSON.stringify({nome: res.data.nome, token: res.data.token}));
             navigate('/home');
           })
-          .catch(err => alert(err.response.data));
+          .catch(err => {
+            console.log(err)
+            alert(err.response.data)});
     console.log(enter);
   }
 
