@@ -4,7 +4,7 @@ import MyWalletLogo from "../components/MyWalletLogo"
 import { useState } from "react"
 import axios from "axios"
 
-export default function SignInPage({REACT_APP_URL_API}) {
+export default function SignInPage() {
 
   let [email, setEmail] = useState('');
   let [senha, setSenha] = useState('');
@@ -13,7 +13,7 @@ export default function SignInPage({REACT_APP_URL_API}) {
   function logar(e) {
     e.preventDefault();
     const enter = {email, senha};
-    axios.post(`${REACT_APP_URL_API}/login`, enter)
+    axios.post(`${import.meta.env.VITE_API_URL}/login`, enter)
           .then(res => {
             localStorage.setItem('dadosMyWallet', JSON.stringify({nome: res.data.nome, token: res.data.token}));
             navigate('/home');
@@ -26,9 +26,9 @@ export default function SignInPage({REACT_APP_URL_API}) {
     <SingInContainer>
       <form onSubmit={e => logar(e)}>
         <MyWalletLogo />
-        <input placeholder="E-mail" type="email" value={email} onChange={e => setEmail(e.target.value)} required/>
-        <input placeholder="Senha" type="password" autocomplete="new-password" value={senha} onChange={e => setSenha(e.target.value)} required/>
-        <button type="submit">Entrar</button>
+        <input placeholder="E-mail" type="email" value={email} onChange={e => setEmail(e.target.value)} required data-test="email"/>
+        <input placeholder="Senha" type="password" autocomplete="new-password" value={senha} onChange={e => setSenha(e.target.value)} required data-test="password"/>
+        <button type="submit" data-test="sign-in-submit">Entrar</button>
       </form>
 
       <Link to={"/cadastro"} >

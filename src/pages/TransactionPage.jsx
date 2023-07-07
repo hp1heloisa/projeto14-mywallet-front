@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components"
 
-export default function TransactionsPage({REACT_APP_URL_API}) {
+export default function TransactionsPage() {
 
   let [valor, setValor] = useState('');
   let [descricao, setDescricao] = useState('');
@@ -21,7 +21,7 @@ export default function TransactionsPage({REACT_APP_URL_API}) {
     e.preventDefault();
     const transacao = {valor, descricao};
     let dados = JSON.parse(localStorage.getItem("dadosMyWallet"));
-    axios.post(`${REACT_APP_URL_API}/nova-transacao/${parametro.tipo}`, transacao, {headers: {Authorization: `Bearer ${dados.token}`}})
+    axios.post(`${import.meta.env.VITE_API_URL}/nova-transacao/${parametro.tipo}`, transacao, {headers: {Authorization: `Bearer ${dados.token}`}})
          .then(res => navigate('/home'))
          .catch(err => alert(err.response.data));
     console.log(transacao);
@@ -30,11 +30,11 @@ export default function TransactionsPage({REACT_APP_URL_API}) {
 
   return (
     <TransactionsContainer>
-      <h1>Nova TRANSAÇÃO</h1>
+      <h1>{(parametro.tipo == 'entrada') ? 'Nova entrada' : 'Nova saída'}</h1>
       <form onSubmit={e => novaTransacao(e)}>
-        <input placeholder="Valor" type="text" value={valor} onChange={e => setValor(e.target.value)} required/>
-        <input placeholder="Descrição" type="text" value={descricao} onChange={e => setDescricao(e.target.value)} required/>
-        <button type="submit">Salvar TRANSAÇÃO</button>
+        <input placeholder="Valor" type="text" value={valor} onChange={e => setValor(e.target.value)} required data-test="registry-amount-input"/>
+        <input placeholder="Descrição" type="text" value={descricao} onChange={e => setDescricao(e.target.value)} required data-test="registry-name-input"/>
+        <button type="submit" data-test="registry-save">{(parametro.tipo == 'entrada') ? 'Salvar entrada' : 'Salvar saída'}</button>
       </form>
     </TransactionsContainer>
   )
