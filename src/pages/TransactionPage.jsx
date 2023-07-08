@@ -19,7 +19,8 @@ export default function TransactionsPage() {
 
   function novaTransacao(e) {
     e.preventDefault();
-    const transacao = {valor, descricao};
+    let valorConverte = Number(valor.replace(",","."));
+    const transacao = {valor: valorConverte, descricao};
     let dados = JSON.parse(localStorage.getItem("dadosMyWallet"));
     axios.post(`${import.meta.env.VITE_API_URL}/nova-transacao/${parametro.tipo}`, transacao, {headers: {Authorization: `Bearer ${dados.token}`}})
          .then(res => navigate('/home'))
