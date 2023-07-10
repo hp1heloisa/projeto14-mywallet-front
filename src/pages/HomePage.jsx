@@ -45,7 +45,7 @@ export default function HomePage() {
            .catch(err => alert(err.response.data));
     }
   }
-
+console.log(transacoes)
   if (transacoes.length > 0){ 
   return (
     <HomeContainer>
@@ -56,25 +56,27 @@ export default function HomePage() {
       <TransactionsContainer>
         <ul>
           {transacoes.map(transacao => {
+              console.log(Number((transacao.valor).replace(',', '.')));
               if (transacao.tipo == 'entrada'){
-                total += Number(transacao.valor);
+                total += Number((transacao.valor).replace(',', '.'));
               } else{
-                total -= Number(transacao.valor);
+                total -= Number((transacao.valor).replace(',','.'));
               }
+              console.log(total);
             return( 
               <ListItemContainer>
                 <div>
                   <span>{transacao.data}</span>
                   <strong data-test="registry-name">{transacao.descricao}</strong>
                 </div>
-                <Value color={transacao.tipo} data-test="registry-amount">{Number(transacao.valor).toFixed(2).toString().replace(".", ",")} <span onClick={() => deletar(transacao)} data-test="registry-delete">x</span></Value>
+                <Value color={transacao.tipo} data-test="registry-amount">{transacao.valor} <span onClick={() => deletar(transacao)} data-test="registry-delete">x</span></Value>
               </ListItemContainer>
             )
           })}
         </ul>
         <article>
           <strong>Saldo</strong>
-          <Value color={total>=0 ? 'entrada' : ''} data-test="total-amount">{total.toFixed(2).toString().replace(".", ",")}</Value>
+          <Value color={total>=0 ? 'entrada' : ''} data-test="total-amount">{total.toFixed(2).toString().replace('.',',')}</Value>
         </article>
       </TransactionsContainer>
       <ButtonsContainer>
