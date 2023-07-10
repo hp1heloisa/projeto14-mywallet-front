@@ -45,6 +45,12 @@ export default function HomePage() {
            .catch(err => alert(err.response.data));
     }
   }
+
+  function editar(transacao) {
+    const informacoes = {valor: transacao.valor, descricao: transacao.descricao};
+    navigate(`/editar-registro/${transacao.tipo}/${transacao._id}`, {state: informacoes});
+  }
+
 console.log(transacoes)
   if (transacoes.length > 0){ 
   return (
@@ -56,18 +62,16 @@ console.log(transacoes)
       <TransactionsContainer>
         <ul>
           {transacoes.map(transacao => {
-              console.log(Number((transacao.valor).replace(',', '.')));
               if (transacao.tipo == 'entrada'){
                 total += Number((transacao.valor).replace(',', '.'));
               } else{
                 total -= Number((transacao.valor).replace(',','.'));
               }
-              console.log(total);
             return( 
               <ListItemContainer>
                 <div>
                   <span>{transacao.data}</span>
-                  <strong data-test="registry-name">{transacao.descricao}</strong>
+                  <strong data-test="registry-name" onClick={() => editar(transacao)}>{transacao.descricao}</strong>
                 </div>
                 <Value color={transacao.tipo} data-test="registry-amount">{transacao.valor} <span onClick={() => deletar(transacao)} data-test="registry-delete">x</span></Value>
               </ListItemContainer>
