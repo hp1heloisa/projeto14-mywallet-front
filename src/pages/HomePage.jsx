@@ -63,9 +63,9 @@ console.log(transacoes)
         <ul>
           {transacoes.map(transacao => {
               if (transacao.tipo == 'entrada'){
-                total += Number((transacao.valor).replace(',', '.'));
+                total += Number((transacao.valor));
               } else{
-                total -= Number((transacao.valor).replace(',','.'));
+                total -= Number((transacao.valor));
               }
             return( 
               <ListItemContainer>
@@ -73,7 +73,7 @@ console.log(transacoes)
                   <span>{transacao.data}</span>
                   <strong data-test="registry-name" onClick={() => editar(transacao)}>{transacao.descricao}</strong>
                 </div>
-                <Value color={transacao.tipo} data-test="registry-amount">{transacao.valor} <span onClick={() => deletar(transacao)} data-test="registry-delete">x</span></Value>
+                <Value color={transacao.tipo} data-test="registry-amount">{transacao.valor.replace('.',',')} <span onClick={() => deletar(transacao)} data-test="registry-delete">x</span></Value>
               </ListItemContainer>
             )
           })}
